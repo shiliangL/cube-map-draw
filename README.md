@@ -1,4 +1,4 @@
-# topevery-baidu-map
+# cube-baidu-map vue百度地图鼠标绘制工具
 
 ## Project setup
 ```
