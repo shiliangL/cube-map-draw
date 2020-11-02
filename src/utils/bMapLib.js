@@ -253,7 +253,6 @@ export function initBMapLib () {
       baidu.lang.isFunction(this[p]) && this[p].apply(this, arguments)
       if (typeof t[p] === 'object') {
         for (i in t[p]) {
-          console.log(t[p][i])
           t[p][i].apply(this, arguments)
         }
       }
@@ -1149,7 +1148,8 @@ export function initBMapLib () {
         // 保留2位小数位
         result.data = result.data.toFixed(2)
       }
-      result.label = this._addLabel(point, result.data)
+      // 地图上不需要显示 // todo
+      // result.label = this._addLabel(point, result.data)
     }
     return result
   }
@@ -1640,4 +1640,5 @@ export function initBMapLib () {
       }
     }
   }
+  return BMapLib
 }

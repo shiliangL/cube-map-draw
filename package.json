@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@icon-park/vue": "^1.0.12",
     "core-js": "^3.6.5",
     "vue": "^2.6.11",
     "vue-baidu-map": "^0.21.22",
