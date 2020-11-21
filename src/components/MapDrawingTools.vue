@@ -1,7 +1,7 @@
 <!--
  * @Author: shiliangL
  * @Date: 2020-10-30 14:46:19
- * @LastEditTime: 2020-11-02 11:31:08
+ * @LastEditTime: 2020-11-08 22:02:25
  * @LastEditors: Do not edit
  * @Description:
  * @FilePath: /cube-baidu-map/src/components/MapDrawingTools.vue
@@ -12,65 +12,36 @@
       <full-screen
         theme="outline"
         size="14"
-        :fill="iconFillColor"
+        :fill="iconColor"
       />
       视角
     </a>
     <template v-if="!preview">
-      <a @click.stop="draw(0)">
+      <a
+        @click.stop="draw(1)"
+        class="stop"
+      >
         <click-tap
           theme="outline"
           size="14"
-          :fill="iconFillColor"
+          fill="#E6A23C"
         />
         停止绘制
       </a>
-      <a @click.stop="draw(2)">
-        <local-two
-          theme="outline"
-          size="14"
-          :fill="iconFillColor"
-        />
-        标点
-      </a>
-      <a @click.stop="draw(3)">
-        <map-draw
-          theme="outline"
-          size="14"
-          :fill="iconFillColor"
-        />
-        画面
-      </a>
-      <a @click.stop="draw(4)">
-        <waves
-          theme="outline"
-          size="14"
-          :fill="iconFillColor"
-        /> 画线
-      </a>
       <a
-        @click.stop="draw(7)"
-        v-if="0"
+        @click.stop="draw(item.type)"
+        v-for="(item,index) in drawType"
+        :key="index"
+        :style="{color: item.iconColor || '' }"
       >
-        <material-two
-          theme="outline"
-          size="14"
-          :fill="iconFillColor"
+        <component
+          :is="item.iconName"
+          v-if="item.iconName"
+          :theme="item.iconTheme || 'outline'"
+          :size="item.iconSize || 14"
+          :fill="item.iconColor || iconColor"
         />
-        <i class="el-icon-search" /> 画圆
-      </a>
-      <a
-        :underline="false"
-        type="primary"
-        @click.stop="draw(8)"
-        v-if="0"
-      >
-        <full-screen-play
-          theme="outline"
-          size="14"
-          :fill="iconFillColor"
-        />
-        <i class="el-icon-search" /> 画方
+        <span v-text="item.text"></span>
       </a>
     </template>
   </div>
@@ -78,7 +49,7 @@
 
 <script>
 
-import { LocalTwo, MapDraw, FullScreen, MaterialTwo, FullScreenPlay, Waves, ClickTap, DEFAULT_ICON_CONFIGS } from '@icon-park/vue'
+import { LocalTwo, Clear, MapDraw, FullScreen, MaterialTwo, FullScreenPlay, Waves, ClickTap, DEFAULT_ICON_CONFIGS } from '@icon-park/vue'
 const ICONCONFIG = { ...DEFAULT_ICON_CONFIGS, prefix: 'icon' }
 
 export default {
@@ -93,12 +64,21 @@ export default {
       type: Boolean,
       default: () => false
     },
-    iconFillColor: {
+    drawType: {
+      type: Array,
+      default: () => [
+        // { text: '标点', iconName: 'LocalTwo', iconColor: '#3894ff', type: 2 },
+        // { text: '画面', iconName: 'MapDraw', iconColor: '#3894ff', type: 2 },
+        // { text: '画线', iconName: 'Waves', iconColor: '#3894ff', type: 2 }
+      ]
+    },
+    iconColor: {
       type: String,
       default: () => '#3894ff'
     }
   },
   components: {
+    Clear,
     Waves,
     MapDraw,
     LocalTwo,
@@ -108,7 +88,7 @@ export default {
     FullScreenPlay
   },
   mounted () {
-    console.log(this.$attrs)
+    // console.log(this.$attrs)
   },
   methods: {
     draw (type) {
@@ -142,6 +122,9 @@ export default {
       display: inline-block;
       padding-right: 4px;
     }
+  }
+  .stop {
+    color: #e6a23c;
   }
 }
 </style>

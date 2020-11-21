@@ -1,7 +1,7 @@
 <!--
  * @Author: shiliangL
  * @Date: 2020-10-21 10:05:51
- * @LastEditTime: 2020-11-02 13:47:46
+ * @LastEditTime: 2020-11-21 14:28:07
  * @LastEditors: Do not edit
  * @Description:
  * @FilePath: /cube-baidu-map/src/components/CubeDrawMap.vue
@@ -11,13 +11,15 @@
     <baidu-map
       :map-click="false"
       :scroll-wheel-zoom="true"
-      center="深圳市"
+      :center="defaultConfig.mapCenter"
       class="bm-view"
-      ak="ggeG9Ii3jcwnXUvVXNQ6vjRYUXV5Ckhz"
+      :ak="defaultConfig.akey"
       @ready="ready"
     >
       <bm-control anchor="BMAP_ANCHOR_TOP_RIGHT">
         <map-drawing-tools
+          v-if="map"
+          :drawType="drawTypeList"
           @draw="draw"
           v-bind="$attrs"
         />
@@ -43,15 +45,15 @@
                 :key="ItemIndex+'polygons_bm_polyline_one'"
                 :path="polygonItem.point"
                 :editing="polygonItem.editing"
-                :stroke-color="polygonItem.strokeColor || initConfig.styleOptions.strokeColor"
-                :fill-color="polygonItem.fillColor || initConfig.styleOptions.fillColor"
-                :fill-opacity="polygonItem.fillOpacity || initConfig.styleOptions.fillOpacity"
-                :stroke-opacity="polygonItem.strokeOpacity || initConfig.styleOptions.strokeOpacity"
-                :stroke-style="polygonItem.strokeStyle || initConfig.styleOptions.strokeStyle"
-                :stroke-weight="polygonItem.strokeWeight || initConfig.styleOptions.strokeWeight"
+                :stroke-color="polygonItem.strokeColor || defaultConfig.styleOptions.strokeColor"
+                :fill-color="polygonItem.fillColor || defaultConfig.styleOptions.fillColor"
+                :fill-opacity="polygonItem.fillOpacity || defaultConfig.styleOptions.fillOpacity"
+                :stroke-opacity="polygonItem.strokeOpacity || defaultConfig.styleOptions.strokeOpacity"
+                :stroke-style="polygonItem.strokeStyle || defaultConfig.styleOptions.strokeStyle"
+                :stroke-weight="polygonItem.strokeWeight || defaultConfig.styleOptions.strokeWeight"
                 @click="click($event, polygonItem)"
                 @rightclick="rightclick($event, polygonItem,ItemIndex)"
-                @lineupdate="polygonUpdate($event, polygonItem,ItemIndex)"
+                @lineupdate="polygonUpdate($event, polygonItem,ItemIndex, 'polylines')"
               />
               <bm-control v-if="polygonItem.centerPoint">
                 <slot
@@ -70,15 +72,15 @@
                 :key="ItemIndex+'polygons_bm_polygon_one'"
                 :path="polygonItem.point"
                 :editing="polygonItem.editing"
-                :stroke-color="polygonItem.strokeColor || initConfig.styleOptions.strokeColor"
-                :fill-color="polygonItem.fillColor || initConfig.styleOptions.fillColor"
-                :fill-opacity="polygonItem.fillOpacity || initConfig.styleOptions.fillOpacity"
-                :stroke-opacity="polygonItem.strokeOpacity || initConfig.styleOptions.strokeOpacity"
-                :stroke-style="polygonItem.strokeStyle || initConfig.styleOptions.strokeStyle"
-                :stroke-weight="polygonItem.strokeWeight || initConfig.styleOptions.strokeWeight"
+                :stroke-color="polygonItem.strokeColor || defaultConfig.styleOptions.strokeColor"
+                :fill-color="polygonItem.fillColor || defaultConfig.styleOptions.fillColor"
+                :fill-opacity="polygonItem.fillOpacity || defaultConfig.styleOptions.fillOpacity"
+                :stroke-opacity="polygonItem.strokeOpacity || defaultConfig.styleOptions.strokeOpacity"
+                :stroke-style="polygonItem.strokeStyle || defaultConfig.styleOptions.strokeStyle"
+                :stroke-weight="polygonItem.strokeWeight || defaultConfig.styleOptions.strokeWeight"
                 @click="click($event, polygonItem)"
                 @rightclick="rightclick($event, polygonItem,ItemIndex)"
-                @lineupdate="polygonUpdate($event, polygonItem,ItemIndex)"
+                @lineupdate="polygonUpdate($event, polygonItem,ItemIndex,'polygons')"
               />
               <bm-control v-if="polygonItem.centerPoint">
                 <slot
@@ -90,6 +92,13 @@
           </template>
         </bm-control>
 
+        <bm-boundary
+          ref="boundary"
+          :name="defaultConfig.mapCenter"
+          :strokeWeight="2"
+          strokeColor="#000"
+          fillColor=""
+        />
       </bm-control>
 
       <!-- 自定义鼠标右键菜单 -->
@@ -111,26 +120,48 @@
 
 <script>
 
-// import { BaiduMap, BmControl, BmLabel, BmPolyline, BmPolygon, BmCircle } from 'vue-baidu-map/components'
-import { BaiduMap, BmControl, BmPolygon, BmMarker, BmPolyline } from 'vue-baidu-map/components'
+import { BaiduMap, BmControl, BmPolygon, BmMarker, BmPolyline, BmBoundary } from 'vue-baidu-map/components'
 import { initBMapLib } from '@/utils/bMapLib'
 import MapDrawingTools from './MapDrawingTools'
+import { deepMerge } from '@/utils/index'
 
 export default {
   name: 'CubeDrawMap',
-  inheritAttrs: false,
+  // inheritAttrs: true,
   props: {
+    config: {
+      type: Object,
+      default: () => { }
+    },
+    drawTypeList: {
+      type: Array,
+      default: () => [
+        { text: '标点', iconName: 'LocalTwo', iconColor: '#3894ff', type: 2 },
+        { text: '画面', iconName: 'MapDraw', iconColor: '#3894ff', type: 3 },
+        { text: '画线', iconName: 'Waves', iconColor: '#3894ff', type: 4 },
+        { text: '清除', iconName: 'Clear', iconColor: '#F56C6C', type: 10 }
+      ]
+    },
     polygons: {
       type: Array,
       default: () => []
+      // validator: (value) => {
+      //   return value[0] ? value[0].point : true
+      // }
     },
     polylines: {
       type: Array,
       default: () => []
+      // validator: (value) => {
+      //   return value[0] ? value[0].point : true
+      // }
     },
     markers: {
       type: Array,
       default: () => []
+      // validator: (value) => {
+      //   return value[0] ? value[0].point : true
+      // }
     }
   },
   components: {
@@ -139,6 +170,7 @@ export default {
     BmMarker,
     BmPolyline,
     BmPolygon,
+    BmBoundary,
     MapDrawingTools
   },
   directives: {
@@ -157,6 +189,10 @@ export default {
       }
     }
   },
+  created () {
+    // this.config 作为配置静态数据 初始化配置使用 暂时不考虑可动态的场景
+    deepMerge(this.defaultConfig, this.config || {})
+  },
   data () {
     return {
       map: null,
@@ -166,8 +202,7 @@ export default {
         left: 0,
         right: 0
       },
-      canOverUpdate: false,
-      initConfig: {
+      defaultConfig: {
         styleOptions: {
           strokeColor: 'blue', // 边线颜色。
           fillColor: '#3689F3', // 填充颜色。当参数为空时，圆形将没有填充效果。
@@ -176,6 +211,8 @@ export default {
           fillOpacity: 0.4, // 填充的透明度，取值范围0 - 1。
           strokeStyle: 'dashed' // 边线的样式，solid dashed。
         },
+        mapCenter: '深圳市',
+        akey: '',
         markers: [],
         polylines: [],
         polygons: [],
@@ -185,17 +222,21 @@ export default {
     }
   },
   mounted () {
-
   },
   methods: {
+    // 省市区边界初始化完毕
+    boundaryLoaded (points) {
+      console.log('this.boundaryLoadedpoints')
+      this.boundaryLoadedpoints = Object.freeze(points)
+      this.map && this.map.setViewport(points)
+    },
     // 地图初始化完毕
     ready ({ map, BMap }) {
       this.BMapLib = initBMapLib()
-      console.log(this.BMapLib, 'this.BMapLib')
       this.map = map
       this.BMap = BMap
       this.$nextTick().then(() => {
-        const { styleOptions } = this.initConfig
+        const { styleOptions } = this.defaultConfig
         // eslint-disable-next-line no-undef
         this.drawingManager = new BMapLib.DrawingManager(map, {
           isOpen: false, // 是否开启绘制模式
@@ -213,6 +254,21 @@ export default {
         this.drawingManager && this.drawingManager.addEventListener('overlaycomplete', (n, e) => this.drawOverlayComplete(e))
 
         this.$emit('ready', { map, BMap, BMapLib: this.BMapLib })
+
+        // console.log(this.BMapLib, 'this.BMapLib')
+
+        setTimeout(() => {
+          // 处理省市区边界视角
+          const points = []
+          const boundaryPaths = this.$refs.boundary ? this.$refs.boundary.paths : []
+          boundaryPaths.forEach(item => {
+            item.forEach(p => {
+              points.push(new BMap.Point(p.lng, p.lat))
+            })
+          })
+          this.getBetterViewByOverlays()
+          this.boundaryPaths = Object.freeze(points)
+        }, 2200)
       })
     },
     getOverLayCenterPoint (path) {
@@ -229,12 +285,25 @@ export default {
     // 选择绘图方式
     draw (type) {
       switch (type) {
-        case 0:
-          this.drawType = null
+        case 10:
+          this.markers.splice(0, this.markers.length)
+          this.polygons.splice(0, this.polygons.length)
+          this.polylines.splice(0, this.polylines.length)
+          this.$emit('update:markers', [])
+          this.$emit('update:polylines', [])
+          this.$emit('update:polygons', [])
+          this.$emit('clear')
           this.drawingManager && this.drawingManager.close()
+          console.log('清除全部')
+          break
+        case 0:
+          this.drawingManager && this.drawingManager.close()
+          this.getBetterViewByOverlays()
           break
         case 1:
-          this.getBetterViewByOverlays()
+          this.drawType = null
+          this.drawingManager && this.drawingManager.close()
+          // this.getBetterViewByOverlays()
           break
         case 2:
           this.drawingManager.open()
@@ -249,15 +318,10 @@ export default {
           this.drawingManager.setDrawingMode('polyline')
           break
         case 5:
-          break
-        case 6:
-          // 完成编辑同步数据
-          break
-        case 7:
           this.drawingManager.open()
           this.drawingManager.setDrawingMode('circle')
           break
-        case 8:
+        case 6:
           this.drawingManager.open()
           this.drawingManager.setDrawingMode('rectangle')
           break
@@ -267,44 +331,59 @@ export default {
     },
     // 绘制覆盖物完成
     drawOverlayComplete (e) {
-      console.log(e, 'event')
       if (!e.drawingMode) return
       // 立即清除鼠标绘制的东西
       this.map && this.map.removeOverlay(e.overlay)
       const overlay = e.overlay
-      const { polygons, polylines, markers, circles, rectangle } = this.initConfig
+      // const { polygons, polylines, markers, circles, rectangle } = this.defaultConfig
       const drawPolygonTypeList = ['polygon', 'polyline', 'circle', 'rectangle']
       if (drawPolygonTypeList.includes(e.drawingMode)) {
         const overLayCenterPoint = this.getOverLayCenterPoint(e.overlay.getPath())
         const polygonOverLay = { point: overlay.getPath(), calculate: e.calculate, editing: true, centerPoint: overLayCenterPoint }
         switch (e.drawingMode) {
           case 'polygon':
-            this.polygons ? this.polygons.push(polygonOverLay) : polygons.push(polygonOverLay)
+            this.polygons && this.polygons.push(polygonOverLay) // : polygons.push(polygonOverLay)
             break
           case 'polyline':
-            this.polylines ? this.polylines.push(polygonOverLay) : polylines.push(polygonOverLay)
+            this.polylines && this.polylines.push(polygonOverLay) // : polylines.push(polygonOverLay)
             break
           case 'circle':
-            this.circles ? this.circles.push(polygonOverLay) : circles.push(polygonOverLay)
+            this.circles && this.circles.push(polygonOverLay) // :  circles.push(polygonOverLay)
             break
           case 'rectangle':
-            this.rectangle ? this.rectangle.push(polygonOverLay) : rectangle.push(polygonOverLay)
+            this.rectangle && this.rectangle.push(polygonOverLay) // : rectangle.push(polygonOverLay)
             break
           default:
             break
         }
       } else {
         const { lat, lng } = overlay.point
-        this.markers ? this.markers.push({ point: { lat, lng } }) : markers.push({ point: { lat, lng } })
+        this.markers && this.markers.push({ point: { lat, lng } }) // : markers.push({ point: { lat, lng } })
       }
     },
     click (e, item) {
-      console.log(e, item)
+      // console.log(e, item)
     },
-    rightclick (e, item) {
-      console.log(e, item)
+    getBetterViewByOverlays () {
+      const ampPoits = []
+      // eslint-disable-next-line no-unused-vars
+      const { markers, polygons, polylines } = this
+      for (const item of markers) {
+        ampPoits.push(new BMap.Point(item.point.lng, item.point.lat))
+      }
+      for (const item of polygons) {
+        item.point.forEach((k) => {
+          ampPoits.push(new BMap.Point(k.lng, k.lat))
+        })
+      }
+      for (const item of polylines) {
+        item.point.forEach((k) => {
+          ampPoits.push(new BMap.Point(k.lng, k.lat))
+        })
+      }
+      this.map && this.map.setViewport(ampPoits.length ? ampPoits : this.boundaryPaths)
     },
-    polygonUpdate (e, item) {
+    polygonUpdate (e, item, index, name) {
       if (!item.editing) return
       item.point = e.target.getPath()
       item.calculate = this.BMapLib.GeoUtils ? this.BMapLib.GeoUtils.getPolygonArea(e.target) : 0
@@ -319,7 +398,7 @@ export default {
 .cube-draw-map {
   .bm-view {
     width: 100%;
-    height: 90vh;
+    height: 100%;
   }
   .contextmenu {
     margin: 0;
