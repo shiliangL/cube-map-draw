@@ -1,10 +1,10 @@
 <!--
  * @Author: shiliangL
  * @Date: 2020-10-21 10:05:51
- * @LastEditTime: 2020-11-21 14:28:07
+ * @LastEditTime: 2020-11-21 21:48:43
  * @LastEditors: Do not edit
  * @Description:
- * @FilePath: /cube-baidu-map/src/components/CubeDrawMap.vue
+ * @FilePath: /cube-baidu-map/src/components/CubeDrawMap/src/index.vue
 -->
 <template>
   <div class="cube-draw-map">
@@ -122,12 +122,11 @@
 
 import { BaiduMap, BmControl, BmPolygon, BmMarker, BmPolyline, BmBoundary } from 'vue-baidu-map/components'
 import { initBMapLib } from '@/utils/bMapLib'
-import MapDrawingTools from './MapDrawingTools'
 import { deepMerge } from '@/utils/index'
+import MapDrawingTools from './MapTools'
 
 export default {
   name: 'CubeDrawMap',
-  // inheritAttrs: true,
   props: {
     config: {
       type: Object,
@@ -226,7 +225,6 @@ export default {
   methods: {
     // 省市区边界初始化完毕
     boundaryLoaded (points) {
-      console.log('this.boundaryLoadedpoints')
       this.boundaryLoadedpoints = Object.freeze(points)
       this.map && this.map.setViewport(points)
     },
@@ -256,7 +254,6 @@ export default {
         this.$emit('ready', { map, BMap, BMapLib: this.BMapLib })
 
         // console.log(this.BMapLib, 'this.BMapLib')
-
         setTimeout(() => {
           // 处理省市区边界视角
           const points = []
@@ -266,8 +263,8 @@ export default {
               points.push(new BMap.Point(p.lng, p.lat))
             })
           })
-          this.getBetterViewByOverlays()
           this.boundaryPaths = Object.freeze(points)
+          this.getBetterViewByOverlays()
         }, 2200)
       })
     },
@@ -366,7 +363,6 @@ export default {
     },
     getBetterViewByOverlays () {
       const ampPoits = []
-      // eslint-disable-next-line no-unused-vars
       const { markers, polygons, polylines } = this
       for (const item of markers) {
         ampPoits.push(new BMap.Point(item.point.lng, item.point.lat))

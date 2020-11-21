@@ -1,7 +1,7 @@
 <!--
  * @Author: shiliangL
  * @Date: 2020-10-21 10:05:51
- * @LastEditTime: 2020-11-21 14:27:46
+ * @LastEditTime: 2020-11-21 22:12:31
  * @LastEditors: Do not edit
  * @Description:
  * @FilePath: /cube-baidu-map/src/views/Home.vue
@@ -38,13 +38,8 @@
 
 <script>
 // @ is an alias to /src
-import CubeDrawMap from '@/components/CubeDrawMap.vue'
-
 export default {
   name: 'Home',
-  components: {
-    CubeDrawMap
-  },
   data () {
     return {
       config: {
