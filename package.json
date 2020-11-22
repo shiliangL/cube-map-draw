@@ -1,6 +1,6 @@
 {
   "name": "cube-map-draw",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": false,
   "description": "A Component Library for Vue.js + vue-baidu-map",
   "main": "lib/cube-map-draw.common.js",
@@ -11,7 +11,6 @@
     "dev": "vue-cli-service serve",
     "build:lib": "vue-cli-service build --target lib --name cube-map-draw --dest lib src/index.js",
     "build": "vue-cli-service build",
-    "push-before": "npm version parch",
     "push": "npm publish",
     "lint": "vue-cli-service lint"
   },
