@@ -23,3 +23,11 @@ deploy:
     keep_history: true
     on:
       branch: master
+  # 发布到 npm
+  - provider: npm
+    email: $NPM_EMAIL
+    api_key: $NPM_TOKEN
+    skip_cleanup: true
+    on:
+      tags: true
+      branch: master
