@@ -11,8 +11,8 @@
     "dev": "vue-cli-service serve",
     "build:lib": "vue-cli-service build --target lib --name cube-map-draw --dest lib src/index.js",
     "build": "vue-cli-service build",
-    "push": "npm version parch",
-    "push-before": "npm publish",
+    "push-before": "npm version parch",
+    "push": "npm publish",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
