@@ -1,6 +1,6 @@
 {
   "name": "cube-map-draw",
-  "version": "0.1.9",
+  "version": "0.2.0",
   "private": false,
   "description": "A Component Library for Vue.js + vue-baidu-map",
   "main": "lib/cube-map-draw.common.js",
