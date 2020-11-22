@@ -1,12 +1,13 @@
 /*
  * @Author: shiliangL
- * @Date: 2020-11-21 21:42:23
- * @LastEditTime: 2020-11-21 22:10:58
+ * @Date: 2020-11-22 08:53:57
+ * @LastEditTime: 2020-11-22 09:00:24
  * @LastEditors: Do not edit
  * @Description:
- * @FilePath: /cube-baidu-map/src/components/index.js
+ * @FilePath: /cube-map-draw/src/index.js
  */
-import CubeMapDraw from './CubeMapDraw/index'
+
+import CubeMapDraw from './components/CubeMapDraw'
 
 const components = [
   CubeMapDraw
@@ -24,7 +25,7 @@ if (typeof window !== 'undefined' && window.Vue) {
 }
 
 export default {
-  version: '0.1.1',
+  version: process.env.npm_package_version,
   install,
   CubeMapDraw
 }

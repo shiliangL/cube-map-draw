@@ -1,19 +1,19 @@
 /*
  * @Author: shiliangL
  * @Date: 2020-10-21 10:05:51
- * @LastEditTime: 2020-11-21 22:11:13
+ * @LastEditTime: 2020-11-22 08:55:49
  * @LastEditors: Do not edit
  * @Description:
- * @FilePath: /cube-baidu-map/src/main.js
+ * @FilePath: /cube-map-draw/src/main.js
  */
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
 
-import CubeMapDraw from '@/components/index.js'
+import CubeDrawMap from './index.js'
 
-Vue.use(CubeMapDraw)
+Vue.use(CubeDrawMap)
 
 Vue.config.productionTip = false
 

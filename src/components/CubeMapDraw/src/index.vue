@@ -1,10 +1,10 @@
 <!--
  * @Author: shiliangL
  * @Date: 2020-10-21 10:05:51
- * @LastEditTime: 2020-11-21 21:48:43
+ * @LastEditTime: 2020-11-22 09:09:07
  * @LastEditors: Do not edit
  * @Description:
- * @FilePath: /cube-baidu-map/src/components/CubeDrawMap/src/index.vue
+ * @FilePath: /cube-map-draw/src/components/CubeMapDraw/src/index.vue
 -->
 <template>
   <div class="cube-draw-map">
@@ -126,7 +126,7 @@ import { deepMerge } from '@/utils/index'
 import MapDrawingTools from './MapTools'
 
 export default {
-  name: 'CubeDrawMap',
+  name: 'CubeMapDraw',
   props: {
     config: {
       type: Object,
@@ -392,6 +392,9 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 .cube-draw-map {
+  min-height: 600px;
+  width: 100%;
+  height: 100%;
   .bm-view {
     width: 100%;
     height: 100%;

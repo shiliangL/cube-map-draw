@@ -1,10 +1,10 @@
 <!--
  * @Author: shiliangL
  * @Date: 2020-10-21 10:05:51
- * @LastEditTime: 2020-11-21 22:12:31
+ * @LastEditTime: 2020-11-22 09:19:11
  * @LastEditors: Do not edit
  * @Description:
- * @FilePath: /cube-baidu-map/src/views/Home.vue
+ * @FilePath: /cube-map-draw/src/views/Home.vue
 -->
 <template>
   <div class="home">
@@ -19,20 +19,13 @@
         {{ polygons }}
       </div>
     </div>
-    <CubeDrawMap
+    <CubeMapDraw
       :mapType="['line']"
       :config="config"
       :markers="markers"
       :polylines="polylines"
       :polygons="polygons"
-    >
-      <!-- <template
-        :slot-scope="{ polygonItem }"
-        slot="overlay-center"
-      >
-        <bm-mrker v-if="polygonItem" :position="polygonItem.centerPoint" />
-      </template> -->
-    </CubeDrawMap>
+    />
   </div>
 </template>
 

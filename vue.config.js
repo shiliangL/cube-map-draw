@@ -1,10 +1,10 @@
 /*
  * @Author: shiliangL
  * @Date: 2020-11-21 22:00:44
- * @LastEditTime: 2020-11-21 22:22:55
+ * @LastEditTime: 2020-11-22 09:49:33
  * @LastEditors: Do not edit
  * @Description:
- * @FilePath: /cube-baidu-map/vue.config.js
+ * @FilePath: /cube-map-draw/vue.config.js
  */
 const path = require('path')
 
@@ -28,26 +28,27 @@ module.exports = {
     // 新增一个 ~ 指向 packages
     config.resolve.alias.set('~', path.resolve('packages'))
 
-    config
-      .when(process.env.NODE_ENV !== 'development',
-        config => {
-          config.optimization.splitChunks({
-            chunks: 'all',
-            maxInitialRequests: Infinity,
-            minSize: 100000,
-            automaticNameDelimiter: '-',
-            cacheGroups: {
-              vendor: {
-                test: /[\\/]node_modules[\\/]/,
-                name (module) {
-                  const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1]
-                  return `chunk.${packageName.replace('@', '')}`
-                },
-                priority: 10
-              }
-            }
-          })
-        }
-      )
-  }
+    // config
+    //   .when(process.env.NODE_ENV !== 'development',
+    //     config => {
+    //       config.optimization.splitChunks({
+    //         chunks: 'all',
+    //         // maxInitialRequests: Infinity,
+    //         minSize: 2048,
+    //         automaticNameDelimiter: '-',
+    //         cacheGroups: {
+    //           vendor: {
+    //             test: /[\\/]node_modules[\\/]/,
+    //             name (module) {
+    //               const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1]
+    //               return `chunk.${packageName.replace('@', '')}`
+    //             },
+    //             priority: 10
+    //           }
+    //         }
+    //       })
+    //     }
+    //   )
+  },
+  css: { extract: false }
 }
