@@ -1,10 +1,10 @@
 <!--
  * @Author: shiliangL
  * @Date: 2020-10-21 10:05:51
- * @LastEditTime: 2020-11-22 09:09:07
+ * @LastEditTime: 2020-11-22 15:19:52
  * @LastEditors: Do not edit
  * @Description:
- * @FilePath: /cube-map-draw/src/components/CubeMapDraw/src/index.vue
+ * @FilePath: /cube-map-draw/src/packages/CubeMapDraw/src/index.vue
 -->
 <template>
   <div class="cube-draw-map">
@@ -122,8 +122,8 @@
 
 import { BaiduMap, BmControl, BmPolygon, BmMarker, BmPolyline, BmBoundary } from 'vue-baidu-map/components'
 import { initBMapLib } from '@/utils/bMapLib'
-import { deepMerge } from '@/utils/index'
 import MapDrawingTools from './MapTools'
+// import { deepMerge } from '@/utils/index'
 
 export default {
   name: 'CubeMapDraw',
@@ -144,23 +144,14 @@ export default {
     polygons: {
       type: Array,
       default: () => []
-      // validator: (value) => {
-      //   return value[0] ? value[0].point : true
-      // }
     },
     polylines: {
       type: Array,
       default: () => []
-      // validator: (value) => {
-      //   return value[0] ? value[0].point : true
-      // }
     },
     markers: {
       type: Array,
       default: () => []
-      // validator: (value) => {
-      //   return value[0] ? value[0].point : true
-      // }
     }
   },
   components: {
@@ -188,10 +179,6 @@ export default {
       }
     }
   },
-  created () {
-    // this.config 作为配置静态数据 初始化配置使用 暂时不考虑可动态的场景
-    deepMerge(this.defaultConfig, this.config || {})
-  },
   data () {
     return {
       map: null,
@@ -210,31 +197,32 @@ export default {
           fillOpacity: 0.4, // 填充的透明度，取值范围0 - 1。
           strokeStyle: 'dashed' // 边线的样式，solid dashed。
         },
-        mapCenter: '深圳市',
         akey: '',
-        markers: [],
-        polylines: [],
-        polygons: [],
-        circles: [],
-        rectangle: []
+        mapCenter: '深圳市',
+        initSetViewport: false // 地图初始化完成 最佳视角
+      }
+    }
+  },
+  watch: {
+    config: {
+      // deep: true,
+      immediate: true,
+      handler (value) {
+        Object.assign(this.defaultConfig, value || {})
+        // deepMerge(this.defaultConfig, this.config || {})
       }
     }
   },
   mounted () {
   },
   methods: {
-    // 省市区边界初始化完毕
-    boundaryLoaded (points) {
-      this.boundaryLoadedpoints = Object.freeze(points)
-      this.map && this.map.setViewport(points)
-    },
     // 地图初始化完毕
     ready ({ map, BMap }) {
       this.BMapLib = initBMapLib()
       this.map = map
       this.BMap = BMap
       this.$nextTick().then(() => {
-        const { styleOptions } = this.defaultConfig
+        const { styleOptions, initSetViewport } = this.defaultConfig
         // eslint-disable-next-line no-undef
         this.drawingManager = new BMapLib.DrawingManager(map, {
           isOpen: false, // 是否开启绘制模式
@@ -250,9 +238,7 @@ export default {
           rectangleOptions: styleOptions // 矩形的样式
         })
         this.drawingManager && this.drawingManager.addEventListener('overlaycomplete', (n, e) => this.drawOverlayComplete(e))
-
         this.$emit('ready', { map, BMap, BMapLib: this.BMapLib })
-
         // console.log(this.BMapLib, 'this.BMapLib')
         setTimeout(() => {
           // 处理省市区边界视角
@@ -264,6 +250,7 @@ export default {
             })
           })
           this.boundaryPaths = Object.freeze(points)
+          if (!initSetViewport) return
           this.getBetterViewByOverlays()
         }, 2200)
       })
@@ -300,7 +287,7 @@ export default {
         case 1:
           this.drawType = null
           this.drawingManager && this.drawingManager.close()
-          // this.getBetterViewByOverlays()
+          this.getBetterViewByOverlays()
           break
         case 2:
           this.drawingManager.open()
@@ -332,34 +319,36 @@ export default {
       // 立即清除鼠标绘制的东西
       this.map && this.map.removeOverlay(e.overlay)
       const overlay = e.overlay
-      // const { polygons, polylines, markers, circles, rectangle } = this.defaultConfig
       const drawPolygonTypeList = ['polygon', 'polyline', 'circle', 'rectangle']
       if (drawPolygonTypeList.includes(e.drawingMode)) {
         const overLayCenterPoint = this.getOverLayCenterPoint(e.overlay.getPath())
         const polygonOverLay = { point: overlay.getPath(), calculate: e.calculate, editing: true, centerPoint: overLayCenterPoint }
         switch (e.drawingMode) {
           case 'polygon':
-            this.polygons && this.polygons.push(polygonOverLay) // : polygons.push(polygonOverLay)
+            this.polygons && this.polygons.push(polygonOverLay)
             break
           case 'polyline':
-            this.polylines && this.polylines.push(polygonOverLay) // : polylines.push(polygonOverLay)
+            this.polylines && this.polylines.push(polygonOverLay)
             break
           case 'circle':
-            this.circles && this.circles.push(polygonOverLay) // :  circles.push(polygonOverLay)
+            this.circles && this.circles.push(polygonOverLay)
             break
           case 'rectangle':
-            this.rectangle && this.rectangle.push(polygonOverLay) // : rectangle.push(polygonOverLay)
+            this.rectangle && this.rectangle.push(polygonOverLay)
             break
           default:
             break
         }
       } else {
         const { lat, lng } = overlay.point
-        this.markers && this.markers.push({ point: { lat, lng } }) // : markers.push({ point: { lat, lng } })
+        this.markers && this.markers.push({ point: { lat, lng } })
       }
     },
     click (e, item) {
       // console.log(e, item)
+    },
+    handlerContextmenu () {
+
     },
     getBetterViewByOverlays () {
       const ampPoits = []
@@ -392,7 +381,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 .cube-draw-map {
-  min-height: 600px;
+  min-height: 300px;
   width: 100%;
   height: 100%;
   .bm-view {

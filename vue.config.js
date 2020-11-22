@@ -1,7 +1,7 @@
 /*
  * @Author: shiliangL
  * @Date: 2020-11-21 22:00:44
- * @LastEditTime: 2020-11-22 09:49:33
+ * @LastEditTime: 2020-11-22 11:08:18
  * @LastEditors: Do not edit
  * @Description:
  * @FilePath: /cube-map-draw/vue.config.js
@@ -26,14 +26,33 @@ module.exports = {
   chainWebpack: config => {
     // @ 默认指向 src 目录
     // 新增一个 ~ 指向 packages
-    config.resolve.alias.set('~', path.resolve('packages'))
+    config.resolve.alias
+      .set('~', path.resolve('packages'))
+      .set('~md', path.resolve('md-docs'))
 
+    // 解析Markdown文件转成vue组件
+    config.module
+      .rule('md')
+      .test(/\.md/)
+      .use('vue-loader')
+      .loader('vue-loader')
+      .options({
+        compilerOptions: {
+          preserveWhitespace: false
+        }
+      })
+      .end()
+      .use('markdown-loader')
+      .loader(
+        require('path').resolve(__dirname, './scripts/md-loader/index.js')
+      )
+      .end()
     // config
     //   .when(process.env.NODE_ENV !== 'development',
     //     config => {
     //       config.optimization.splitChunks({
     //         chunks: 'all',
-    //         // maxInitialRequests: Infinity,
+    //         maxInitialRequests: Infinity,
     //         minSize: 2048,
     //         automaticNameDelimiter: '-',
     //         cacheGroups: {

@@ -1,0 +1,27 @@
+{
+    "component-list": [
+      {
+        "name": "cube",
+        "groups": [
+          {
+            "groupName": "",
+            "list": [
+              {
+                "path": "/readme",
+                "title": "写在前面"
+              },
+              {
+                "path": "/example",
+                "title": "开发样例",
+                "views": true
+              },
+              {
+                "path": "/basic",
+                "title": "基本使用"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }

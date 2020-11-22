@@ -1,10 +1,10 @@
 <!--
  * @Author: shiliangL
  * @Date: 2020-10-21 10:05:51
- * @LastEditTime: 2020-11-22 09:19:11
+ * @LastEditTime: 2020-11-22 15:12:17
  * @LastEditors: Do not edit
  * @Description:
- * @FilePath: /cube-map-draw/src/views/Home.vue
+ * @FilePath: /cube-map-draw/src/views/example.vue
 -->
 <template>
   <div class="home">
@@ -20,7 +20,6 @@
       </div>
     </div>
     <CubeMapDraw
-      :mapType="['line']"
       :config="config"
       :markers="markers"
       :polylines="polylines"
@@ -30,15 +29,22 @@
 </template>
 
 <script>
-// @ is an alias to /src
+
 export default {
   name: 'Home',
   data () {
     return {
       config: {
+        mapCenter: '深圳市',
         akey: 'ggeG9Ii3jcwnXUvVXNQ6vjRYUXV5Ckhz', // 百度地图秘钥 必填
+        initSetViewport: true, // 地图初始化完成 最佳视角
         styleOptions: {
-          fillColor: 'red'
+          strokeColor: 'red', // 边线颜色。
+          fillColor: 'red', // 填充颜色。当参数为空时，圆形将没有填充效果。
+          strokeWeight: 2, // 边线的宽度，以像素为单位。
+          strokeOpacity: 1, // 边线透明度，取值范围0 - 1。
+          fillOpacity: 0.4, // 填充的透明度，取值范围0 - 1。
+          strokeStyle: 'dashed' // 边线的样式，solid dashed。
         }
       },
       markers: [{ point: { lat: 22.638481, lng: 113.822543 } }],
@@ -58,7 +64,7 @@ export default {
   height: 100%;
   .datav {
     font-size: 12px;
-    height: 5rem;
+    height: 100px;
     overflow: auto;
     padding: 4px;
   }
