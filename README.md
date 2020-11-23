@@ -1,4 +1,5 @@
 [![Build Status](https://www.travis-ci.org/shiliangL/cube-map-draw.svg?branch=master)](https://www.travis-ci.org/shiliangL/cube-map-draw)
+
 [![NPM](https://nodei.co/npm/cube-map-draw.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/cube-map-draw/)
 ### 写在前面
 
