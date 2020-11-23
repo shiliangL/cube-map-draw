@@ -18,6 +18,18 @@
               {
                 "path": "/basic",
                 "title": "基本使用"
+              },
+              {
+                "path": "/drawType",
+                "title": "绘制类型"
+              },
+              {
+                "path": "/overLayoutEvent",
+                "title": "覆盖物事件"
+              },
+              {
+                "path": "/mapConfig",
+                "title": "其他可配置"
               }
             ]
           }
