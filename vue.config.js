@@ -1,7 +1,7 @@
 /*
  * @Author: shiliangL
  * @Date: 2020-11-21 22:00:44
- * @LastEditTime: 2020-11-22 11:08:18
+ * @LastEditTime: 2020-11-23 08:29:35
  * @LastEditors: Do not edit
  * @Description:
  * @FilePath: /cube-map-draw/vue.config.js
@@ -9,7 +9,7 @@
 const path = require('path')
 
 module.exports = {
-  publicPath: '/',
+  publicPath: './',
   outputDir: 'dist',
   assetsDir: 'static',
   lintOnSave: process.env.NODE_ENV === 'development',
