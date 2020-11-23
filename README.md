@@ -1,3 +1,4 @@
+[![Build Status](https://www.travis-ci.org/shiliangL/cube-map-draw.svg?branch=master)](https://www.travis-ci.org/shiliangL/cube-map-draw)
 ### 写在前面
 
 - vue-baidu-map是一个很好的vue百度地图应用开发组件。但是相关的地图绘制工具组件，并没有很好的解决方案，所以就想着能不能结合BMapLib.DrawingManager
